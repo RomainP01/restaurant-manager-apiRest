@@ -35,6 +35,15 @@ namespace APIRestDotNet.Utils
             cmd.CommandText = @"SELECT `id`, `name`, `dishType`, `dishStatus` FROM `dish` ORDER BY `id`;";
             return await ReadAllAsync(await cmd.ExecuteReaderAsync());
         }
+        
+        public async Task DeleteAllAsync()
+        {
+            using var txn = await Db.Connection.BeginTransactionAsync();
+            using var cmd = Db.Connection.CreateCommand();
+            cmd.CommandText = @"DELETE FROM `dish`";
+            await cmd.ExecuteNonQueryAsync();
+            await txn.CommitAsync();
+        }
 
         private async Task<List<Dish>> ReadAllAsync(DbDataReader reader)
         {
