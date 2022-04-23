@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using APIRestDotNet.Utils;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APIRestDotNet.Controllers
@@ -12,7 +13,7 @@ namespace APIRestDotNet.Controllers
         {
             Db = db;
         }
-
+        
         [HttpGet]
         public async Task<IActionResult> Get()
         {
