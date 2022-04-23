@@ -23,6 +23,9 @@ namespace APIRestDotNet
         {
             services.AddControllers();
             services.AddTransient<AppDb>(_ => new AppDb(Configuration["ConnectionStrings:DefaultConnection"]));
+            services.AddCors(options => options.AddDefaultPolicy(
+                builder => builder.AllowAnyOrigin().AllowAnyHeader()
+                    .AllowAnyMethod()));
 
         }
 
@@ -37,6 +40,8 @@ namespace APIRestDotNet
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthorization();
 
