@@ -333,6 +333,79 @@ namespace APIRestDotNet.Controllers
             return new OkResult();
         }
 
+        [HttpGet("command/")]
+        public async Task<IActionResult> GetAllCommands()
+        {
+            await Db.Connection.OpenAsync();
+            var query = new CommandQuery(Db);
+            var result = await query.GetAllCommandsAsync();
+            return new OkObjectResult(result);
+        }
+
+        [HttpGet("command/{id}")]
+        public async Task<IActionResult> GetOneCommand(int id)
+        {
+            await Db.Connection.OpenAsync();
+            var query = new CommandQuery(Db);
+            var result = await query.FindOneAsync(id);
+            if (result is null)
+                return new NotFoundResult();
+            return new OkObjectResult(result);
+        }
+
+        [HttpPost("command/")]
+        public async Task<IActionResult> PostCommand([FromBody]Command body)
+        {
+            await Db.Connection.OpenAsync();
+            body.Db = Db;
+            await body.InsertAsync();
+            return new OkObjectResult(body);
+        }
+
+        [HttpPut("command/{id}")]
+        public async Task<IActionResult> UpdateACommand(int id, [FromBody]Command body)
+        {
+            await Db.Connection.OpenAsync();
+            var query = new CommandQuery(Db);
+            var result = await query.FindOneAsync(id);
+            if (result is null)
+                return new NotFoundResult();
+            result.CommandDate = body.CommandDate;
+            result.CommandTable = body.CommandTable;
+            result.IdStarter = body.IdStarter;
+            result.IdMeal = body.IdMeal;
+            result.IdDessert = body.IdDessert;
+            result.IdDrink = body.IdDrink;
+            result.StateStarter = body.StateStarter;
+            result.StateMeal = body.StateMeal;
+            result.StateDessert = body.StateDessert;
+            result.StateDrink = body.StateDrink;
+            await result.UpdateAsync();
+            return new OkObjectResult(result);
+        }
+
+        [HttpDelete("command/{id}")]
+        public async Task<IActionResult> DeleteOneCommand(int id)
+        {
+            await Db.Connection.OpenAsync();
+            var query = new CommandQuery(Db);
+            var result = await query.FindOneAsync(id);
+            if (result is null)
+                return new NotFoundResult();
+            await result.DeleteAsync();
+            return new OkResult();
+        }
+
+        [HttpDelete("command/")]
+        public async Task<IActionResult> DeleteAllCommands()
+        {
+            await Db.Connection.OpenAsync();
+            var query = new CommandQuery(Db);
+            await query.DeleteAllAsync();
+            return new OkResult();
+        }
+
+
         
     }
 }
